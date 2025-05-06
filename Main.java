@@ -1,82 +1,37 @@
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class Main {
     public static void main(String[] args) {
+        // 1. Перетворення оцінки в текст
+        System.out.println("Оцінки (Function)");
+        int[] scores = {95, 80, 70, 50};
+        for (int score : scores) {
+            System.out.println(score + ": " + GradeUtils.describe(score));
+        }
 
+        // 2. Перевірка курсу
+        System.out.println("\n Рік: ");
+        int[] courses = {1, 2, 5};
+        for (int course : courses) {
+            String level = StudyUtils.isMagistr(course) ? "Магістр" : "Бакалавр";
+            System.out.println("Курс " + course + ": " + level);
+        }
 
-        // Спосіб 1
-        System.out.println("1 Завдання : ");
-        System.out.println("1 спосіб:");
-        Function<Integer,String> gradeToText1 = new Function<Integer, String>() {
-            @Override
-            public String apply(Integer grade) {
-                if (grade>=90)return "Відмінно";
-                else if (grade>=75)return "Добре";
-                else if (grade>=60)return "Задовільно";
-                else return "Незадовільно";
-            }
-        };
-        System.out.println(gradeToText1.apply(92));
+        // 3. Обробка списку оцінок
+        List<Integer> allGrades = Arrays.asList(95, 85, 75, 65, 55, 45);
 
-        // Спосіб 2
-        System.out.println("2 спосіб:");
-        Function<Integer,String> gradeToText = grade -> {
-            if (grade>=90)return "Відмінно";
-            else if (grade>=75)return "Добре";
-            else if (grade>=60)return "Задовільно";
-            else return "Незадовільно";
-        };
-        System.out.println(gradeToText.apply(85));
-        System.out.println(gradeToText1.apply(70));
-        System.out.println(gradeToText1.apply(50));
-
-        // Спосіб 1
-        System.out.println("2 Завдання : ");
-        System.out.println("1 спосіб:");
-        Predicate<Integer> isMaster = new Predicate<Integer>() {
-            @Override
-            public boolean test(Integer course) {
-                return course>=5;
-            }
-        };
-        System.out.println(isMaster.test(1));
-        System.out.println(isMaster.test(2));
-        System.out.println(isMaster.test(5));
-
-        // Спосіб 2 для Predicate
-        System.out.println("2 спосіб:");
-        Predicate<Integer> isMaster1 = course -> course >= 5;
-        System.out.println(isMaster1.test(1));
-        System.out.println(isMaster1.test(2));
-        System.out.println(isMaster1.test(5));
-
-        // Спосіб 1 для перевірки оцінок
-        System.out.println("3 Завдання : ");
-        System.out.println("1 спосіб:");
-        Predicate<Integer> hasPassed = grade -> grade >= 60;
-        Function<Integer, String> gradeToText2 = grade -> {
-            if (grade>=90)return "Відмінно";
-            else if (grade>=75)return "Добре";
-            else if (grade>=60)return "Задовільно";
-            else return "Незадовільно";
-        };
-
-        List<Integer> grades = Arrays.asList(95, 85, 75, 65, 55, 45);
-        System.out.println("Без Stream:");
-        for (Integer grade : grades) {
-            if (hasPassed.test(grade)) {
-                System.out.println("Оцінка " +grade+ ": " +gradeToText2.apply(grade));
+        System.out.println("\nБез stream:");
+        for (int mark : allGrades) {
+            if (mark >= 60) {
+                System.out.println(mark + ": " + GradeUtils.describe(mark));
             }
         }
 
-        // З Stream
-        System.out.println("З Stream:");
-        grades.stream()
-                .filter(hasPassed)
-                .map(grade -> "Оцінка "+grade+": " + gradeToText.apply(grade))
+        System.out.println("\nЗ stream:");
+        allGrades.stream()
+                .filter(m -> m >= 60)
+                .map(m -> m + ": " + GradeUtils.describe(m))
                 .forEach(System.out::println);
     }
 }
